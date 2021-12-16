@@ -7,6 +7,13 @@ const Response = (statusCode, body) => ({
   body: JSON.stringify(body),
 });
 
+const Err = (statusCode, message) => {
+  const err = new Error(message);
+  err.statusCode = statusCode;
+  return err;
+}
+
 module.exports = {
   Response,
+  Err,
 }

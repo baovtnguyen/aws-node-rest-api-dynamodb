@@ -1,8 +1,9 @@
-service: todo-app-offline
+service: todo-app
 
 frameworkVersion: '2'
 
 plugins:
+  - serverless-export-env
   - serverless-dynamodb-local
   - serverless-offline
 
@@ -19,6 +20,10 @@ custom:
     migration:
       dir: offline/migrations
 
+  export-env:
+    overwrite: true
+    enableOffline: true
+
 provider:
   name: aws
   runtime: nodejs14.x
@@ -27,7 +32,8 @@ provider:
   region: ap-southeast-1
   profile: serverlessadmin
   environment:
-    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    DYNAMODB_TABLE_NAME: ${self:service}-${opt:stage, self:provider.stage}
+    TODO_APP_PK: ${self:service}
   iam:
     role:
       statements:
@@ -39,7 +45,7 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}'
+          Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_NAME}'
 
 functions:
   create:
@@ -89,10 +95,14 @@ resources:
       DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: content
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: pk
             KeyType: HASH
+          - AttributeName: content
+            KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        TableName: ${self:provider.environment.DYNAMODB_TABLE_NAME}

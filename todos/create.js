@@ -1,23 +1,23 @@
-const dynamodb = require('../libs/dynamodb/dynamodb');
-const { v4: uuidv4 } = require('uuid');
+const { StatusCodes } = require('http-status-codes');
 
 const { Response } = require('../libs/response');
+const { validateTodoData } = require('../libs/todos/todoValidator');
+const Todo = require('../libs/todos/todo');
 
 module.exports.create = async (event, context, callback) => {
-
-  const params = {
-    TableName: process.env.DYNAMODB_TABLE,
-    Item: {
-      id: uuidv4(),
-      text: 'Hello World!',
-    },
-  };
+  const data = JSON.parse(event.body);
 
   try {
-    await dynamodb.put(params).promise();
+    validateTodoData(data);
 
-    return Response(201, params.Item);
+    const todo = new Todo(data.content);
+    await todo.save();
+
+    return Response(StatusCodes.CREATED, todo);
   } catch (err) {
+    if(err.code === 'ConditionalCheckFailedException')
+      return Response(err.statusCode, {message: 'Content already exists!'})
+
     return Response(err.statusCode, { message: err.message });
   }
 };

@@ -1,2 +1,3 @@
 # Learning-serverless-framework
-## A SIMPLE TODO APPLICATION
+
+## A Simple Todo Application
