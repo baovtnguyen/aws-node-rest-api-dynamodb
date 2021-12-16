@@ -10,6 +10,7 @@ const { CONTENT_KEY } = require('./todoValidator');
 class Todo {
   constructor(content) {
     this.pk = TODO_APP_PK;
+    this.sk = uuidv4();
     this.content = content;
     this.completed = false;
     this.createdAt = moment(new Date()).format(DATETIME_FORMAT);
@@ -22,33 +23,29 @@ class Todo {
       Item: {
         ...this,
       },
-      ConditionExpression: `attribute_not_exists(${CONTENT_KEY})`,
+      ConditionExpression: 'attribute_not_exists(pk) AND attribute_not_exists(sk)',
     };
 
     return await dynamodb.put(params).promise();
   }
 
-  static async findOne(id) {
+  static async findOne(content) {
     const params = {
       TableName: DYNAMODB_TABLE_NAME,
       Item: {
-        id,
+        pk: TODO_APP_PK,
       },
     };
 
-    return await dynamodb.scan(params).promise();
+    return await dynamodb.query(params).promise();
   }
 
-  // static async deleteAll() {
-
-  // }
-
-  static async deleteItem(content) {
+  static async deleteItem(sk) {
     const params = {
       TableName: DYNAMODB_TABLE_NAME,
       Key: {
         pk: TODO_APP_PK,
-        content,
+        sk,
       },
       ReturnValues: 'ALL_OLD',
     };
@@ -56,16 +53,20 @@ class Todo {
     return await dynamodb.delete(params).promise();
   }
 
-  static async find() {
-    const params = {
-      TableName: DYNAMODB_TABLE_NAME,
-      Key: {
-        id,
-      },
-      ReturnValues: 'ALL_OLD',
-    };
+  // static async find() {
+  //   const params = {
+  //     TableName: DYNAMODB_TABLE_NAME,
+  //     Key: {
+  //       id,
+  //     },
+  //     ReturnValues: 'ALL_OLD',
+  //   };
 
-    return await dynamodb.query();
+  //   return await dynamodb.query();
+  // }
+
+  static async todoExists(content) {
+    const todo = Todo.findOne(content);
   }
 }
 

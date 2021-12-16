@@ -9,15 +9,11 @@ module.exports.create = async (event, context, callback) => {
 
   try {
     validateTodoData(data);
-
     const todo = new Todo(data.content);
     await todo.save();
 
     return Response(StatusCodes.CREATED, todo);
   } catch (err) {
-    if(err.code === 'ConditionalCheckFailedException')
-      return Response(err.statusCode, {message: 'Content already exists!'})
-
     return Response(err.statusCode, { message: err.message });
   }
 };

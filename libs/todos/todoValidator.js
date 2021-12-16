@@ -22,7 +22,7 @@ const validateContent = (content) => {
 };
 
 module.exports = {
-  validateTodoData,
   CONTENT_KEY,
   SUPPORTED_KEYS,
+  validateTodoData,
 };

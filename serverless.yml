@@ -68,7 +68,7 @@ functions:
     handler: todos/get.get
     events:
       - http:
-          path: todos/{id}
+          path: todos/{sk}
           method: GET
           cors: true
 
@@ -76,7 +76,7 @@ functions:
     handler: todos/update.update
     events:
       - http:
-          path: todos/{id}
+          path: todos/{sk}
           method: PUT
           cors: true
 
@@ -84,7 +84,7 @@ functions:
     handler: todos/delete.delete
     events:
       - http:
-          path: todos/{id}
+          path: todos/{sk}
           method: DELETE
           cors: true
 
@@ -97,12 +97,12 @@ resources:
         AttributeDefinitions:
           - AttributeName: pk
             AttributeType: S
-          - AttributeName: content
+          - AttributeName: sk
             AttributeType: S
         KeySchema:
           - AttributeName: pk
             KeyType: HASH
-          - AttributeName: content
+          - AttributeName: sk
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.DYNAMODB_TABLE_NAME}

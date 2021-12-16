@@ -5,7 +5,7 @@ const Todo = require('../libs/todos/todo');
 
 module.exports.delete = async (event, context, callback) => {
   try {
-    const res = await Todo.deleteItem(event.pathParameters.content);
+    const res = await Todo.deleteItem(event.pathParameters.sk);
     if (!res.Attributes)
       return Response(StatusCodes.BAD_REQUEST, {
         message: 'Could not delete a non-existing item!',
