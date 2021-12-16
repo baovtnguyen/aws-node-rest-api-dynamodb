@@ -73,22 +73,6 @@ class Todo {
     return await dynamodb.delete(params).promise();
   }
 
-  // static async find() {
-  //   const params = {
-  //     TableName: DYNAMODB_TABLE_NAME,
-  //     Key: {
-  //       id,
-  //     },
-  //     ReturnValues: 'ALL_OLD',
-  //   };
-
-  //   return await dynamodb.query();
-  // }
-
-  // static async todoExists(content) {
-  //   const todo = Todo.findOne(content);
-  // }
-
   static async findAll() {
     const params = {
       TableName: DYNAMODB_TABLE_NAME,
