@@ -1,10 +1,8 @@
-const moment = require('moment');
 const { v4: uuidv4 } = require('uuid');
 
 const dynamodb = require('../dynamodb/dynamodb');
 const { DYNAMODB_TABLE_NAME, TODO_APP_PK } = require('../env');
 
-const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 const { CONTENT_KEY } = require('./todoValidator');
 
 class Todo {
@@ -13,8 +11,6 @@ class Todo {
     this.sk = uuidv4();
     this.content = content;
     this.completed = false;
-    this.createdAt = moment(new Date()).format(DATETIME_FORMAT);
-    this.updatedAt = moment(new Date()).format(DATETIME_FORMAT);
   }
 
   async save() {
@@ -23,21 +19,45 @@ class Todo {
       Item: {
         ...this,
       },
-      ConditionExpression: 'attribute_not_exists(pk) AND attribute_not_exists(sk)',
+      ConditionExpression:
+        'attribute_not_exists(pk) AND attribute_not_exists(sk)',
     };
 
     return await dynamodb.put(params).promise();
   }
 
-  static async findOne(content) {
+  static async findOne(sk) {
     const params = {
       TableName: DYNAMODB_TABLE_NAME,
-      Item: {
-        pk: TODO_APP_PK,
+      KeyConditionExpression: 'pk = :pk AND sk = :sk',
+      ExpressionAttributeValues: {
+        ':pk': TODO_APP_PK,
+        ':sk': sk,
       },
     };
 
     return await dynamodb.query(params).promise();
+  }
+
+  static async updateOne(sk, newContent) {
+    const params = {
+      TableName: DYNAMODB_TABLE_NAME,
+      Key: {
+        pk: TODO_APP_PK,
+        sk,
+      },
+      ConditionExpression: 'attribute_exists(pk) AND attribute_exists(sk)',
+      UpdateExpression: 'SET #content = :content',
+      ExpressionAttributeNames: {
+        '#content': CONTENT_KEY,
+      },
+      ExpressionAttributeValues: {
+        ':content': newContent,
+      },
+      ReturnValues: 'ALL_NEW',
+    };
+
+    return await dynamodb.update(params).promise();
   }
 
   static async deleteItem(sk) {
@@ -47,7 +67,7 @@ class Todo {
         pk: TODO_APP_PK,
         sk,
       },
-      ReturnValues: 'ALL_OLD',
+      ConditionExpression: 'attribute_exists(pk) AND attribute_exists(sk)',
     };
 
     return await dynamodb.delete(params).promise();
@@ -65,8 +85,20 @@ class Todo {
   //   return await dynamodb.query();
   // }
 
-  static async todoExists(content) {
-    const todo = Todo.findOne(content);
+  // static async todoExists(content) {
+  //   const todo = Todo.findOne(content);
+  // }
+
+  static async findAll() {
+    const params = {
+      TableName: DYNAMODB_TABLE_NAME,
+      KeyConditionExpression: `pk = :pk`,
+      ExpressionAttributeValues: {
+        ':pk': TODO_APP_PK,
+      },
+    };
+
+    return await dynamodb.query(params).promise();
   }
 }
 
