@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes');
 const { Response } = require('../libs/response');
 const Todo = require('../libs/todos/todo');
 
-module.exports.list = async (event, context, callback) => {
+module.exports.listTodo = async (event, context, callback) => {
   try {
     const res = await Todo.findAll();
 

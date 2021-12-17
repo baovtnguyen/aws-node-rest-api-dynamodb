@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes');
 const { Response, Err } = require('../libs/response');
 const Todo = require('../libs/todos/todo');
 
-module.exports.get = async (event, context, callback) => {
+module.exports.getTodo = async (event, context, callback) => {
   try {
     const res = await Todo.findOne(event.pathParameters.sk);
 

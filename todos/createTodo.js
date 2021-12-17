@@ -4,7 +4,7 @@ const { Response } = require('../libs/response');
 const { validatePostData } = require('../libs/todos/todoValidator');
 const Todo = require('../libs/todos/todo');
 
-module.exports.create = async (event, context, callback) => {
+module.exports.createTodo = async (event, context, callback) => {
   const data = JSON.parse(event.body);
 
   try {

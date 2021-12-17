@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { create } = require('../todos/create');
+const { createTodo } = require('../todos/createTodo');
 const Todo = require( '../libs/todos/todo');
 
 afterAll(async () => {
@@ -13,11 +13,23 @@ test('Should create a new todo', async () => {
       "content": "Hello World!"
     }`,
   };
-  const response = await create(event);
+  const response = await createTodo(event);
   const data = JSON.parse(response.body);
   expect(response.statusCode).toBe(201);
   expect(data).toHaveProperty('content');
   expect(data.content).toEqual('Hello World!');
+});
+
+test('Should create a new todo with default completed set to false', async () => {
+  const event = {
+    body: `{
+      "content": "Hello World!"
+    }`,
+  };
+  const response = await createTodo(event);
+  const data = JSON.parse(response.body);
+  expect(response.statusCode).toBe(201);
+  expect(data.completed).toBe(false);
 });
 
 test('Should throw error if content is not a string', async () => {
@@ -26,22 +38,23 @@ test('Should throw error if content is not a string', async () => {
       "content": 1234
     }`,
   };
-  const response = await create(event);
+  const response = await createTodo(event);
   const data = JSON.parse(response.body);
   expect(response.statusCode).toBe(400);
   expect(data.message).toEqual('content: is not string');
 });
 
 test('Should throw error with non-supported keys', async () => {
+  const somekey = 'somekey';
   const event = {
     body: `{
-      "somekey": "This should fail"
+      "${somekey}": "This should fail"
     }`,
   };
-  const response = await create(event);
+  const response = await createTodo(event);
   const data = JSON.parse(response.body);
   expect(response.statusCode).toBe(400);
-  expect(data.message).toEqual(`Key 'somekey' is not supported.`);
+  expect(data.message).toEqual(`Key '${somekey}' is not supported.`);
 });
 
 test('Should create a new todo with completed field set to true', async () => {
@@ -51,9 +64,8 @@ test('Should create a new todo with completed field set to true', async () => {
       "completed": true
     }`,
   };
-  const response = await create(event);
+  const response = await createTodo(event);
   const data = JSON.parse(response.body);
   expect(response.statusCode).toBe(201);
-  console.log(data);
   expect(data.completed).toBe(true);
 });

@@ -32,7 +32,7 @@ class Todo {
       Key: {
         pk: TODO_APP_PK,
         sk,
-      }
+      },
     };
 
     return await dynamodb.get(params).promise();
@@ -41,7 +41,7 @@ class Todo {
   static async updateOne(sk, data) {
     const updateAttributes = [];
     const expressionAttributeNames = {};
-    const expressionAttributeValues = {}
+    const expressionAttributeValues = {};
 
     if (data.content !== undefined) {
       updateAttributes.push('#content = :content');
@@ -100,10 +100,9 @@ class Todo {
   static async deleteAll() {
     const res = await Todo.findAll();
     const todos = res.Items;
-    todos.forEach(async (todo) => {
-      console.log(todo.sk);
+    for (const todo of todos) {
       await Todo.deleteOne(todo.sk);
-    })
+    }
   }
 }
 

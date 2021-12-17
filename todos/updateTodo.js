@@ -4,7 +4,7 @@ const { Response, Err } = require('../libs/response');
 const { validatePutData } = require('../libs/todos/todoValidator');
 const Todo = require('../libs/todos/todo');
 
-module.exports.update = async (event, context, callback) => {
+module.exports.updateTodo = async (event, context, callback) => {
   const data = JSON.parse(event.body);
 
   try {
@@ -15,7 +15,7 @@ module.exports.update = async (event, context, callback) => {
   } catch (err) {
     if (err.code === 'ConditionalCheckFailedException')
       return Response(StatusCodes.BAD_REQUEST, {
-        message: 'Could not update a non-existing todo!',
+        message: 'Could not update a non-existent todo!',
       });
 
     return Response(err.statusCode, { message: err.message });
