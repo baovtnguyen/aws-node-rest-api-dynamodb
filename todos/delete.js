@@ -5,7 +5,7 @@ const Todo = require('../libs/todos/todo');
 
 module.exports.delete = async (event, context, callback) => {
   try {
-    await Todo.deleteItem(event.pathParameters.sk);
+    await Todo.deleteOne(event.pathParameters.sk);
 
     return Response(StatusCodes.OK, { message: 'Successfully Deleted!' });
   } catch (err) {

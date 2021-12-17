@@ -7,9 +7,10 @@ module.exports.get = async (event, context, callback) => {
   try {
     const res = await Todo.findOne(event.pathParameters.sk);
 
-    if (!res.Count) throw Err(400, 'Todo does not exist.');
+    if(!res.Item)
+      throw Err(400, 'Todo does not exist.');
 
-    return Response(StatusCodes.OK, res.Items[0]);
+    return Response(StatusCodes.OK, res.Item);
   } catch (err) {
     return Response(err.statusCode, { message: err.message });
   }
