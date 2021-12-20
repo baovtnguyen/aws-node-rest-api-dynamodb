@@ -3,6 +3,7 @@ service: todo-app
 frameworkVersion: '2'
 
 plugins:
+  - serverless-aws-documentation
   - serverless-export-env
   - serverless-dynamodb-local
   - serverless-offline
@@ -23,6 +24,21 @@ custom:
   export-env:
     overwrite: true
     enableOffline: true
+
+  documentation:
+    api:
+      info:
+        version: '1'
+        title: 'Serverless Todo APIs'
+        contact:
+          name: 'Bao Nguyen KMS'
+          url: 'https://github.com/baovtnguyen'
+          email: 'baovtnguyen@kms-technology.com'
+        license:
+          name: 'Licensing'
+          url: 'http://www.example.com/licensing'
+      tags:
+        - name: 'Create a new todo'
 
 provider:
   name: aws

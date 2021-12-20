@@ -23,7 +23,7 @@ class Todo {
         'attribute_not_exists(pk) AND attribute_not_exists(sk)',
     };
 
-    return await dynamodb.put(params).promise();
+    return dynamodb.put(params).promise();
   }
 
   static async findOne(sk) {
@@ -35,7 +35,7 @@ class Todo {
       },
     };
 
-    return await dynamodb.get(params).promise();
+    return dynamodb.get(params).promise();
   }
 
   static async updateOne(sk, data) {
@@ -69,7 +69,7 @@ class Todo {
       ReturnValues: 'ALL_NEW',
     };
 
-    return await dynamodb.update(params).promise();
+    return dynamodb.update(params).promise();
   }
 
   static async deleteOne(sk) {
@@ -82,7 +82,7 @@ class Todo {
       ConditionExpression: 'attribute_exists(pk) AND attribute_exists(sk)',
     };
 
-    return await dynamodb.delete(params).promise();
+    return dynamodb.delete(params).promise();
   }
 
   static async findAll() {
@@ -94,7 +94,7 @@ class Todo {
       },
     };
 
-    return await dynamodb.query(params).promise();
+    return dynamodb.query(params).promise();
   }
 
   static async deleteAll() {
