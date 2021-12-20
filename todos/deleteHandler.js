@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes');
 const { Response } = require('../libs/response');
 const Todo = require('../libs/todos/todo');
 
-module.exports.deleteTodo = async (event, context, callback) => {
+module.exports.handler = async (event, context, callback) => {
   try {
     await Todo.deleteOne(event.pathParameters.sk);
 
