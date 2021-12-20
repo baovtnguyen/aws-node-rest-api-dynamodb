@@ -1,0 +1,7 @@
+getTodo:
+  handler: handlers/index.getTodo
+  events:
+    - http:
+        path: todos/{sk}
+        method: GET
+        cors: true

@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { listTodo } = require('../todos/listTodo');
+const { listTodo} = require('../handlers/index');
 const Todo = require('../libs/todos/todo');
 
 const contents = ['First Todo', 'Second Todo', 'Third Todo'];

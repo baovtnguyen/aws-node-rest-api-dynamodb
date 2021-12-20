@@ -3,7 +3,6 @@ service: todo-app
 frameworkVersion: '2'
 
 plugins:
-  - serverless-aws-documentation
   - serverless-export-env
   - serverless-dynamodb-local
   - serverless-offline
@@ -24,21 +23,6 @@ custom:
   export-env:
     overwrite: true
     enableOffline: true
-
-  documentation:
-    api:
-      info:
-        version: '1'
-        title: 'Serverless Todo APIs'
-        contact:
-          name: 'Bao Nguyen KMS'
-          url: 'https://github.com/baovtnguyen'
-          email: 'baovtnguyen@kms-technology.com'
-        license:
-          name: 'Licensing'
-          url: 'http://www.example.com/licensing'
-      tags:
-        - name: 'Create a new todo'
 
 provider:
   name: aws
@@ -64,61 +48,11 @@ provider:
           Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_NAME}'
 
 functions:
-  create:
-    handler: todos/createHandler.handler
-    events:
-      - http:
-          path: todos
-          method: POST
-          cors: true
-
-  list:
-    handler: todos/listHandler.handler
-    events:
-      - http:
-          path: todos
-          method: GET
-          cors: true
-
-  get:
-    handler: todos/getHandler.handler
-    events:
-      - http:
-          path: todos/{sk}
-          method: GET
-          cors: true
-
-  update:
-    handler: todos/updateHandler.handler
-    events:
-      - http:
-          path: todos/{sk}
-          method: PUT
-          cors: true
-
-  delete:
-    handler: todos/deleteHandler.handler
-    events:
-      - http:
-          path: todos/{sk}
-          method: DELETE
-          cors: true
+  - ${file(./config/functions/createTodo.yml)}
+  - ${file(./config/functions/listTodo.yml)}
+  - ${file(./config/functions/deleteTodo.yml)}
+  - ${file(./config/functions/updateTodo.yml)}
+  - ${file(./config/functions/getTodo.yml)}
 
 resources:
-  Resources:
-    TodosDynamoDBTable:
-      Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: pk
-            AttributeType: S
-          - AttributeName: sk
-            AttributeType: S
-        KeySchema:
-          - AttributeName: pk
-            KeyType: HASH
-          - AttributeName: sk
-            KeyType: RANGE
-        BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.DYNAMODB_TABLE_NAME}
+  - ${file(./config/resources/todoTable.yml)}

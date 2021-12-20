@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { createTodo } = require('../todos/createTodo');
+const { createTodo } = require('../handlers/index');
 const Todo = require( '../libs/todos/todo');
 
 afterAll(async () => {

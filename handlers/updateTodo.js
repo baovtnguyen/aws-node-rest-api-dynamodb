@@ -4,7 +4,7 @@ const { Response, Err } = require('../libs/response');
 const { validatePutData } = require('../libs/todos/todoValidator');
 const Todo = require('../libs/todos/todo');
 
-module.exports.handler = async (event, context, callback) => {
+module.exports = async (event, context, callback) => {
   const data = JSON.parse(event.body);
 
   try {

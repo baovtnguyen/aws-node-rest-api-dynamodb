@@ -1,0 +1,7 @@
+deleteTodo:
+  handler: handlers/index.deleteTodo
+  events:
+    - http:
+        path: todos/{sk}
+        method: DELETE
+        cors: true

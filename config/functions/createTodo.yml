@@ -1,0 +1,7 @@
+createTodo:
+  handler: handlers/index.createTodo
+  events:
+    - http:
+        path: todos
+        method: POST
+        cors: true

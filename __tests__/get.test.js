@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { getTodo } = require('../todos/getTodo');
+const { getTodo } = require('../handlers/index');
 const Todo = require('../libs/todos/todo');
 
 let todo;

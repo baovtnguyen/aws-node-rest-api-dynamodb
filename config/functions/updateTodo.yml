@@ -1,0 +1,7 @@
+updateTodo:
+  handler: handlers/index.updateTodo
+  events:
+    - http:
+        path: todos/{sk}
+        method: PUT
+        cors: true
