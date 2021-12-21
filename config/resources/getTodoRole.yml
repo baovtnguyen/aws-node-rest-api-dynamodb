@@ -1,0 +1,23 @@
+Resources:
+  getTodoRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /todos/getTodo/
+      RoleName: getTodo
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: getTodoPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: 'Allow'
+                Action:
+                  - dynamodb:GetItem
+                Resource: ${self:provider.environment.DYNAMODB_ARN}

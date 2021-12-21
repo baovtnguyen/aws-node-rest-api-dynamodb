@@ -5,3 +5,9 @@ createTodo:
         path: todos
         method: POST
         cors: true
+  # role: createTodoRole
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - dynamodb:PutItem
+      Resource: ${self:provider.environment.DYNAMODB_ARN}

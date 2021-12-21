@@ -5,3 +5,9 @@ updateTodo:
         path: todos/{sk}
         method: PUT
         cors: true
+  # role: updateTodoRole
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - dynamodb:UpdateItem
+      Resource: ${self:provider.environment.DYNAMODB_ARN}

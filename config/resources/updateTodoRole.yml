@@ -1,0 +1,23 @@
+Resources:
+  updateTodoRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /todos/updateTodo/
+      RoleName: updateTodo
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: updateTodoPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: 'Allow'
+                Action:
+                  - dynamodb:UpdateItem
+                Resource: ${self:provider.environment.DYNAMODB_ARN}

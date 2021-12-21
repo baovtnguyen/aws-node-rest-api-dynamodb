@@ -4,6 +4,7 @@ frameworkVersion: '2'
 
 plugins:
   - serverless-export-env
+  - serverless-iam-roles-per-function
   - serverless-dynamodb-local
   - serverless-offline
 
@@ -34,18 +35,19 @@ provider:
   environment:
     DYNAMODB_TABLE_NAME: ${self:service}-${opt:stage, self:provider.stage}
     TODO_APP_PK: ${self:service}
-  iam:
-    role:
-      statements:
-        - Effect: Allow
-          Action:
-            - dynamodb:Query
-            - dynamodb:Scan
-            - dynamodb:GetItem
-            - dynamodb:PutItem
-            - dynamodb:UpdateItem
-            - dynamodb:DeleteItem
-          Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_NAME}'
+    DYNAMODB_ARN: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_NAME}'
+  # iam:
+  #   role:
+  #     statements:
+  #       - Effect: Allow
+  #         Action:
+  #           - dynamodb:Query
+  #           - dynamodb:Scan
+  #           - dynamodb:GetItem
+  #           - dynamodb:PutItem
+  #           - dynamodb:UpdateItem
+  #           - dynamodb:DeleteItem
+  #         Resource: ${self:provider.environment.DYNAMODB_ARN}
 
 functions:
   - ${file(./config/functions/createTodo.yml)}
@@ -56,3 +58,8 @@ functions:
 
 resources:
   - ${file(./config/resources/todoTable.yml)}
+  # - ${file(./config/resources/createTodoRole.yml)}
+  # - ${file(./config/resources/deleteTodoRole.yml)}
+  # - ${file(./config/resources/getTodoRole.yml)}
+  # - ${file(./config/resources/listTodoRole.yml)}
+  # - ${file(./config/resources/updateTodoRole.yml)}

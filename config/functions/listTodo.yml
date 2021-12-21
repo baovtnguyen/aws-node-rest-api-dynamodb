@@ -5,3 +5,9 @@ listTodo:
         path: todos
         method: GET
         cors: true
+  # role: listTodoRole
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - dynamodb:Query
+      Resource: ${self:provider.environment.DYNAMODB_ARN}

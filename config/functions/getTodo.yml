@@ -5,3 +5,9 @@ getTodo:
         path: todos/{sk}
         method: GET
         cors: true
+  # role: getTodoRole
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - dynamodb:GetItem
+      Resource: ${self:provider.environment.DYNAMODB_ARN}

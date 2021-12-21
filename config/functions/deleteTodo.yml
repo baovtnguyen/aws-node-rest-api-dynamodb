@@ -5,3 +5,9 @@ deleteTodo:
         path: todos/{sk}
         method: DELETE
         cors: true
+  # role: deleteTodoRole
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - dynamodb:DeleteItem
+      Resource: ${self:provider.environment.DYNAMODB_ARN}

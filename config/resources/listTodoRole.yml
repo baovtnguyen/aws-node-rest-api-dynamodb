@@ -1,0 +1,23 @@
+Resources:
+  listTodoRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /todos/listTodo/
+      RoleName: listTodo
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: listTodoPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: 'Allow'
+                Action:
+                  - dynamodb:Query
+                Resource: ${self:provider.environment.DYNAMODB_ARN}
